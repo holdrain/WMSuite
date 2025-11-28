@@ -126,7 +126,7 @@ transforms_dict_decode = {
     ]),
 }
 
-
+# you can define default messages for testing
 message_dict = {
     "dwtdct":'00001100001001011110001101101110',
     "stegastamp":'0'*100,

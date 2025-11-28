@@ -1,87 +1,119 @@
 # 💧 WMSuite: Image Watermark Processing Toolkit
 
-> An Python toolset designed for the embedding and extraction of several invisible image watermarks.
+WMSuite is a lightweight Python toolkit that integrates several existing neural-network–based invisible watermarking algorithms.  
+The goal of this project is not to propose new watermarking methods, but to provide a **simple and unified interface** for:
+
+- embedding watermarks into images from a specified folder, and  
+- extracting watermarks from images in a specified folder.
+
+Currently, WMSuite includes support for 6–7 publicly available watermarking models, with a consistent configuration and execution workflow to make experimentation easier.
+
 
 ## 🚀 Quick Start Guide
 
 ### 1. Environment Setup
 
-
+To set up the project environment, follow the steps below.
+```bash
+conda create -n <env_name> python=3.10
+```
+Activate the newly created environment.
+```bash
+conda activate <env_name>
+```
+Install all required Python dependencies from the provided requirements file.
+```
+pip install -r requirements.txt
+```
 
 
 ### 2. Model Weights Configuration 📥
 
-Deep-learning based algorithms require pre-trained model weights. **You will need to manually obtain these files from the original project repositories.** Based on the `METHOD` you choose, place the corresponding files in the recommended directory.
+Several neural-network-based watermarking algorithms in this project require pretrained model weights.  
+Please follow the instructions below to download the corresponding weights and place them in:
 
-| Algorithm (`METHOD`) | Model Description | **Acquisition Method / Download Guidance** | Recommended Path |
-| :--- | :--- | :--- | :--- |
-| `vine` | Pre-trained weights for the Vine model. | Please visit the **[Invisible Watermark original repository](https://github.com/ShieldMnt/invisible-watermark)** Releases or documentation to find the weight file. | `./wm/models/vine_weights.pth` |
-| `hidden` | Pre-trained weights for the HiDDeN model. | Please visit the **[HiDDeN original repository](https://github.com/ando-khachatryan/HiDDeN)** documentation or data download links to obtain the file. | `./wm/models/hidden_weights.pth` |
+#### • DwTDCT, RivaGAN
+DwTDCT is a classical, non–neural-network watermarking algorithm, while RivaGAN is a neural watermarking method.  
+Both algorithms are integrated in this project by directly calling the Python API provided by: https://github.com/ShieldMnt/invisible-watermark.git
 
----
+#### • HiDDeN  
+Download from: https://github.com/ando-khachatryan/HiDDeN.git
 
-## ⚙️ Usage and Configuration
+#### • StegaStamp  
+Download from: https://github.com/ningyu1991/ArtificialGANFingerprints.git
 
-### Step A: Watermark Embedding (`emb.sh`)
+#### • Stable Signature  
+Download from: https://github.com/facebookresearch/stable_signature
 
-Used to embed watermark information into images within the source dataset.
+#### • Vine
+This watermarking algorithm does not require manual weight preparation.  
+When invoked for the first time, it will automatically download the required model weights from HuggingFace.
 
-# Run the embedding script
-bash emb.sh
+📁 Example Directory Structure (after downloading all weights)
 
-
-| Environment Variable | Default Value | Description |
-| :--- | :--- | :--- |
-| `METHOD` | `"vine"` | The watermarking algorithm to be used. |
-| `DATASETS` | `.../train` | **Absolute or relative path to the source dataset.** |
-| `OUTPUT_DIR` | `./outputs` | Directory to save the watermarked images. |
-| `NUM` | `8` | The total number of images scheduled for processing. |
-| `BATCH_SIZE` | `8` | Size of the processing batch. |
-
-### Step B: Watermark Extraction and Detection (`extract.sh`)
-
-Used to extract the watermark from watermarked images and generate a detection report.
-
-# Run the extraction script
-bash extract.sh
-
-
-| Environment Variable | Default Value | Description |
-| :--- | :--- | :--- |
-| `METHOD` | `"hidden"` | The extraction algorithm (must match the embedding algorithm). |
-| `DATAPATH` | `.../outputs/hidden` | **Input path for images to be tested** (usually the output of Step A). |
-| `LOG_DIR` | `./outputs` | Directory to save the extraction results (including the detection rate `.txt` file). |
-| `DEVICE` | `"cuda:0"` | Specifies the running device (supports `cuda:X` or `cpu`). |
-| `BETA` | `1e-6` | Algorithm-specific hyperparameter. |
-
----
-
-## 📂 Project Structure
-
-WMSuite/
-├── wm/                 # Core source package
-│   ├── cli/            # Command Line Interface (emb, extract)
-│   ├── algorithms/     # Algorithm implementations
-│   └── models/         # Models and weights
-├── outputs/            # Default output directory
-├── emb.sh              # Batch watermark embedding script
-├── extract.sh          # Batch watermark extraction script
-└── README.md           # Documentation file
-
----
-
-## 💖 Acknowledgements and Legal Disclaimer
-
-This project utilizes code and ideas referenced from the following excellent open-source projects. In accordance with the MIT and similar permissive licenses, you **must** retain the original project's copyright notice and license text when reusing the code.
-
-### Referenced Projects
-
-| Project Name | GitHub Link | License | Legal Requirement |
-| :--- | :--- | :--- | :--- |
-| **Invisible Watermark** | [ShieldMnt/invisible-watermark](https://github.com/ShieldMnt/invisible-watermark) | MIT | Must retain original copyright and license. |
-| **HiDDeN** | [ando-khachatryan/HiDDeN](https://github.com/ando-khachatryan/HiDDeN) | MIT | Must retain original copyright and license. |
-| **ArtificialGANFingerprints** | [ningyu1991/ArtificialGANFingerprints](https://github.com/ningyu1991/ArtificialGANFingerprints) | MIT | Must retain original copyright and license. |
-| **Stable Signature** | [facebookresearch/stable_signature](https://github.com/facebookresearch/stable_signature) | MIT | Must retain original copyright and license. |
-
-**We highly recommend adding a brief author and source declaration at the top of any source code files you have directly copied or modified.**
 ```
+algorithms/
+└── checkpoints/
+	├── hidden/
+	│   ├── combined-noise--epoch-400.pyt
+	│   ├── crop-epoch-300.pyt
+	│   └── no-noise--epoch-400.pyt
+	├── stable_signature/
+	│   ├── dec_48b_whit.torchscript.pt
+	│   ├── sd2_decoder.pth
+	│   └── v2-1_512-ema-pruned.ckpt
+	└── stegastamp/
+		├── AFHQ_cat2dog_256x256_decoder.pth
+		└── AFHQ_cat2dog_256x256_encoder.pth
+```
+
+
+---
+
+### 3. Usage
+
+WMSuite provides two basic functionalities: watermark embedding and watermark extraction.  
+You can run them directly using the provided shell scripts:
+
+To embed watermarks into all images within a specified folder, run:
+```bash
+bash emb.sh
+```
+To extract watermarks from images in a specified folder, run:
+```bash
+bash extract.sh
+```
+
+
+### 🙏 Acknowledgements
+
+This project integrates implementations and pretrained models from several existing watermarking algorithms.  
+We would like to acknowledge and thank the authors of the following works and repositories:
+
+---
+
+#### **• HiDDeN**  
+Repository: https://github.com/ando-khachatryan/HiDDeN.git  
+
+#### **• StegaStamp**  
+Repository: https://github.com/ningyu1991/ArtificialGANFingerprints.git  
+
+#### **• Stable Signature (Meta AI)**  
+Repository: https://github.com/facebookresearch/stable_signature  
+
+#### **• Vine**  
+Repository: https://github.com/Shilin-LU/VINE.git  
+
+#### **• DwTDCT & RivaGAN**  
+Integrated via the Python API provided by the Invisible Watermark library:  
+https://github.com/ShieldMnt/invisible-watermark.git  
+
+---
+
+All copyrights, model weights, and algorithmic contributions belong to their respective authors.  
+WMSuite only provides a unified interface to access these methods for research and experimentation.
+
+
+
+
+
