@@ -86,32 +86,9 @@ bash extract.sh
 
 
 ### 🙏 Acknowledgements
-
 This project integrates implementations and pretrained models from several existing watermarking algorithms.  
-We would like to acknowledge and thank the authors of the following works and repositories:
+We would like to acknowledge and thank the authors of these repositories.
 
----
-
-#### **• HiDDeN**  
-Repository: https://github.com/ando-khachatryan/HiDDeN.git  
-
-#### **• StegaStamp**  
-Repository: https://github.com/ningyu1991/ArtificialGANFingerprints.git  
-
-#### **• Stable Signature (Meta AI)**  
-Repository: https://github.com/facebookresearch/stable_signature  
-
-#### **• Vine**  
-Repository: https://github.com/Shilin-LU/VINE.git  
-
-#### **• DwTDCT & RivaGAN**  
-Integrated via the Python API provided by the Invisible Watermark library:  
-https://github.com/ShieldMnt/invisible-watermark.git  
-
----
-
-All copyrights, model weights, and algorithmic contributions belong to their respective authors.  
-WMSuite only provides a unified interface to access these methods for research and experimentation.
 
 
 
