@@ -1,14 +1,10 @@
-import sys
-
-sys.path.append('/mnt/shared/Dongziping/sharedcode/DiffusionWM/src/Watermarkschemes/models/hidden')
-sys.path.append('/data/shared/Dongziping/sharedcode/DiffusionWM/src/Watermarkschemes/models/hidden')
 import numpy as np
 import torch
 import torch.nn as nn
-from conv_bn_relu import ConvBNRelu
-from discriminator import Discriminator
-from noise_layers.noiser import Noiser
-from vgg_loss import VGGLoss
+from wm.algorithms.models.hidden.conv_bn_relu import ConvBNRelu
+from wm.algorithms.models.hidden.discriminator import Discriminator
+from wm.algorithms.models.hidden.noise_layers.noiser import Noiser
+from wm.algorithms.models.hidden.vgg_loss import VGGLoss
 
 
 class Encoder(nn.Module):

@@ -31,7 +31,8 @@ grpcio==1.74.0
 hf-xet==1.1.5
 huggingface-hub==0.34.0
 imageio==2.37.0
-imWatermark==0.0.2
+PyWavelets==1.8.0 
+invisible-watermark==0.2.0
 matplotlib==3.10.3
 numpy==2.2.6
 omegaconf==2.3.0
