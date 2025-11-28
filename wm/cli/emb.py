@@ -12,7 +12,7 @@ def Options():
     parser.add_argument('--method', type=str, required=True, help='watermark scheme')
     parser.add_argument('--batch_size',type=int,default=5,help='for batch size')
     parser.add_argument('--filetype',choices=['.jpg','.png'],default=".png")
-    parser.add_argument('--message',type=str,default='default',choices=['default','random'])
+    parser.add_argument('--message_mode',type=str,default='default',choices=['default','random'])
     args = parser.parse_args()
     return args
 
@@ -22,17 +22,17 @@ if __name__ == '__main__':
     device = torch.device('cuda:0')
     set_seeds(2025)
     if opt.method == 'stable_signature':
-        run_stable_signature(opt,device)
+        run_stable_signature(opt)
     elif opt.method == 'dwtdct':
-        run_dwtdct(opt,opt.message)
+        run_dwtdct(opt)
     elif opt.method == 'stegastamp':
-        run_stegastamp(opt,device,opt.message)
+        run_stegastamp(opt)
     elif opt.method == 'hidden':
-        run_hidden(opt,device,opt.message)
+        run_hidden(opt)
     elif opt.method == 'rivaGan':
-        run_rivagan(opt,opt.message)
+        run_rivagan(opt)
     elif opt.method == 'vine':
-        run_vine(opt,device)
+        run_vine(opt)
     else:
         raise NotImplementedError
     

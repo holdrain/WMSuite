@@ -24,7 +24,7 @@ from wm.core.model_choice import (
 )
 
 
-def run_stable_signature(opt,device):
+def run_stable_signature(opt):
     prompts_list, negative_prompts = load_prompts("wm/algorithms/config/stable_signature/prompt.yml")
     message = message_dict[opt.method]
     print(prompts_list,negative_prompts)
@@ -32,8 +32,8 @@ def run_stable_signature(opt,device):
     cl_dir = new_dir(os.path.join(opt.output_dir,opt.method,'clean'))
     wm_dir = new_dir(os.path.join(opt.output_dir,opt.method,message))
     
-    encoder_nowm,_ = get_stablesignature(device,nowm=True)
-    encoder,_ = get_stablesignature(device,nowm=False)
+    encoder_nowm,_ = get_stablesignature(opt.device,nowm=True)
+    encoder,_ = get_stablesignature(opt.device,nowm=False)
     
     count = 0
     while count < opt.num:
@@ -52,13 +52,18 @@ def run_stable_signature(opt,device):
                 pbar.update(1)
 
 
-def run_hidden(opt,device,message='default'):
+def run_hidden(opt):
     cfgpath = "wm/algorithms/config/hidden/hidden.yaml"
     cfg = load_config(cfgpath)
-    encoder,_ = get_hiddenmodel(cfg.train,device)
+    encoder,_ = get_hiddenmodel(cfg.train,opt.device)
 
     ds = CustomImageFolder(opt.dataset,transform=transforms_dict_encode[opt.method],num=opt.num)
     dl = DataLoader(ds, batch_size = opt.batch_size, num_workers=0)
+
+    if opt.message_mode == 'default':
+        message = message_dict[opt.method]
+    else:
+        message = msg2str(generate_random_fingerprints(len(message_dict[opt.method])))
 
     cl_dir = new_dir(os.path.join(opt.output_dir,opt.method,'clean'))
     wm_dir = new_dir(os.path.join(opt.output_dir,opt.method,message))
@@ -67,13 +72,8 @@ def run_hidden(opt,device,message='default'):
     with tqdm(total=ds.__len__(),desc=f"generating wm images by {opt.method}") as pbar:
         count = 0
         for image in dl:
-            if message == 'random':
-                message = msg2str(generate_random_fingerprints(len(message_dict[opt.method])))
-            else:
-                message = message_dict[opt.method]
-
-            image = image.to(device)
-            message_tensor = torch.tensor(str2msg(message)).repeat(image.shape[0],1).to(device)
+            image = image.to(opt.device)
+            message_tensor = torch.tensor(str2msg(message)).repeat(image.shape[0],1).to(opt.device)
             encoded_img = encoder(image,message_tensor)
             for idx in range(encoded_img.shape[0]):
                 vutils.save_image(encoded_img[idx],os.path.join(wm_dir,f"{count:04d}"+opt.filetype),normalize=True)
@@ -83,9 +83,14 @@ def run_hidden(opt,device,message='default'):
 
 
 
-def run_rivagan(opt,message='default'):
+def run_rivagan(opt):
     ds = CustomImageFolder(opt.dataset,transform=transforms_dict_encode[opt.method],num=opt.num)
     dl = DataLoader(ds, batch_size = 1,shuffle=False, num_workers=0)
+
+    if opt.message_mode == 'default':
+        message = message_dict[opt.method]
+    else:
+        message = msg2str(generate_random_fingerprints(len(message_dict[opt.method]))) 
 
     cl_dir = new_dir(os.path.join(opt.output_dir,opt.method,'clean'))
     wm_dir = new_dir(os.path.join(opt.output_dir,opt.method,message))
@@ -93,11 +98,6 @@ def run_rivagan(opt,message='default'):
     with tqdm(total=ds.__len__(),desc=f"generating wm images by {opt.method}") as pbar:
         count = 0
         for image in dl:
-            if message == 'random':
-                message = msg2str(generate_random_fingerprints(len(message_dict[opt.method])))
-            else:
-                message = message_dict[opt.method] 
-            
             encoder,_ = get_rivagan(wm_text=message)
             encoded_img = encoder(image)
             vutils.save_image(encoded_img,os.path.join(wm_dir,f"{count:04d}"+opt.filetype),normalize=True)
@@ -106,9 +106,14 @@ def run_rivagan(opt,message='default'):
             pbar.update(1)
     
 
-def run_dwtdct(opt,message='default'):
+def run_dwtdct(opt):
     ds = CustomImageFolder(opt.dataset,transform=transforms_dict_encode[opt.method],num=opt.num)
     dl = DataLoader(ds, batch_size = 1, shuffle=False, num_workers=0)
+
+    if opt.message_mode == 'default':
+        message = message_dict[opt.method]
+    else:
+        message = msg2str(generate_random_fingerprints(len(message_dict[opt.method])))
 
     cl_dir = new_dir(os.path.join(opt.output_dir,opt.method,'clean'))
     wm_dir = new_dir(os.path.join(opt.output_dir,opt.method,message))
@@ -116,11 +121,6 @@ def run_dwtdct(opt,message='default'):
     with tqdm(total=ds.__len__(),desc=f"generating wm images by {opt.method}") as pbar:
         count = 0
         for image in dl:
-            if message == 'random':
-                message = msg2str(generate_random_fingerprints(len(message_dict[opt.method])))
-            else:
-                message = message_dict[opt.method]
-            
             encoder,_ = get_DwtDct(wm_text=message,wm_type='bits')
             encoded_img = encoder(image)
             vutils.save_image(encoded_img,os.path.join(wm_dir,f"{count:04d}"+opt.filetype),normalize=True)
@@ -129,11 +129,16 @@ def run_dwtdct(opt,message='default'):
             pbar.update(1)
 
 
-def run_stegastamp(opt,device,message='default'):
-    encoder,decoder = get_Stegastamp(device)
+def run_stegastamp(opt):
+    encoder,decoder = get_Stegastamp(opt.device)
 
     ds = CustomImageFolder(opt.dataset,transform=transforms_dict_encode[opt.method],num=opt.num)
     dl = DataLoader(ds, batch_size = opt.batch_size, shuffle=False, num_workers=0)
+
+    if opt.message_mode == 'default':
+        message = message_dict[opt.method]
+    else:
+        message = msg2str(generate_random_fingerprints(len(message_dict[opt.method])))
     
     cl_dir = new_dir(os.path.join(opt.output_dir,opt.method,'clean'))
     wm_dir = new_dir(os.path.join(opt.output_dir,opt.method,message))
@@ -141,13 +146,8 @@ def run_stegastamp(opt,device,message='default'):
     with tqdm(total=ds.__len__(),desc=f"generating wm images by {opt.method}") as pbar:
         count = 0
         for image in dl:
-            if message == 'random':
-                message = msg2str(generate_random_fingerprints(len(message_dict[opt.method])))
-            else:
-                message = message_dict[opt.method]
-
-            image = image.to(device)
-            message_tensor = torch.tensor(str2msg(message)).repeat(image.shape[0],1).to(device)
+            image = image.to(opt.device)
+            message_tensor = torch.tensor(str2msg(message)).repeat(image.shape[0],1).to(opt.device)
             encoded_img = encoder(message_tensor,image)
 
             for idx in range(encoded_img.shape[0]):
@@ -157,10 +157,15 @@ def run_stegastamp(opt,device,message='default'):
                 pbar.update(1)
 
 
-def run_vine(opt,device,message='default'):
-    encoder,_ = get_vine(device)
+def run_vine(opt):
+    encoder,_ = get_vine(opt.device)
     ds = CustomImageFolder(opt.dataset,transform=transforms_dict_encode[opt.method],num=opt.num)
     dl = DataLoader(ds, batch_size = 1, shuffle=False, num_workers=0)
+
+    if opt.message_mode == 'default':
+        message = message_dict[opt.method]
+    else:
+        message = msg2str(generate_random_fingerprints(len(message_dict[opt.method])))
 
     cl_dir = new_dir(os.path.join(opt.output_dir,opt.method,'clean'))
     wm_dir = new_dir(os.path.join(opt.output_dir,opt.method,message))
@@ -168,13 +173,8 @@ def run_vine(opt,device,message='default'):
     with tqdm(total=ds.__len__(),desc=f"generating wm images by {opt.method}") as pbar:
         count = 0
         for image in dl:
-            if message == 'random':
-                message = msg2str(generate_random_fingerprints(len(message_dict[opt.method])))
-            else:
-                message = message_dict[opt.method] 
-            
-            image = image.to(device)
-            message_tensor = torch.tensor(str2msg(message)).repeat(image.shape[0],1).to(device)
+            image = image.to(opt.device)
+            message_tensor = torch.tensor(str2msg(message)).repeat(image.shape[0],1).to(opt.device)
             encoded_img = encoder(image,message_tensor)
 
             for idx in range(encoded_img.shape[0]):
