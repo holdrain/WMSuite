@@ -1,12 +1,11 @@
 BATCH_SIZE=8
 NUM=8
 METHOD="vine"
-DATASETS="/mnt/shared/Diffusiondbsub/train"
+DATASETS=""
 OUTPUT_DIR="./outputs"
 
-# generate authentic watermark data for testing the performance of defense
+echo "Generating watermarked data using ${METHOD} on ${DATASETS}"
 
-echo "Creating dataset for ${METHOD} on ${DATASETS}"
 python -m wm.cli.emb \
     --dataset ${DATASETS} \
     --output_dir ${OUTPUT_DIR} \

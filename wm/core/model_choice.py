@@ -97,8 +97,8 @@ def get_stablesignature(device,nowm=False):
         state_dict = torch.load("wm/algorithms/checkpoints/stable_signature/sd2_decoder.pth",map_location='cpu',weights_only=False)
         unexpected_keys = ldm_aef.load_state_dict(state_dict, strict=False)
 
-    # huggingface stable diffusion path
-    model = "/mnt/shared/AI_4/Huggingface/stable-diffusion-v2-1"
+    # Your huggingface stable diffusion path
+    model = ""
     pipe = StableDiffusionPipeline.from_pretrained(model).to(device)
     pipe.vae.decode = (lambda x,  *args, **kwargs: ldm_aef.decode(x).unsqueeze(0))
 

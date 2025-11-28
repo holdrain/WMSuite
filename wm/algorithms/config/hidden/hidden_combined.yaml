@@ -4,7 +4,7 @@ train:
   number_of_epochs: 200
   runs_folder: './runs'
   start_epoch': 1
-  checkpoint: Watermarkschemes/checkpoints/combined-noise--epoch-400.pyt
+  checkpoint: wm/algorithms/checkpoints/hidden/combined-noise--epoch-400.pyt
 
   use_vgg: False
   adversarial_loss: 1.0e-3
