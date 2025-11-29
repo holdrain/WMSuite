@@ -168,14 +168,14 @@ def run_vine(opt):
         message = msg2str(generate_random_fingerprints(len(message_dict[opt.method])))
 
     cl_dir = new_dir(os.path.join(opt.output_dir,opt.method,'clean'))
-    wm_dir = new_dir(os.path.join(opt.output_dir,opt.method,message))
+    wm_dir = new_dir(os.path.join(opt.output_dir,opt.method, message))
     
     with tqdm(total=ds.__len__(),desc=f"generating wm images by {opt.method}") as pbar:
         count = 0
         for image in dl:
             image = image.to(opt.device)
             message_tensor = torch.tensor(str2msg(message)).repeat(image.shape[0],1).to(opt.device)
-            encoded_img = encoder(image,message_tensor)
+            encoded_img = encoder(image,secret=message_tensor)
 
             for idx in range(encoded_img.shape[0]):
                 vutils.save_image(encoded_img[idx],os.path.join(wm_dir,f"{count:04d}"+opt.filetype),normalize=True)

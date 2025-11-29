@@ -42,7 +42,7 @@ def load_models(method, device):
     elif method == 'stable_signature':
         return get_stablesignature(device)
     elif method == 'vine':
-        return get_vine()
+        return get_vine(device)
     else:
         raise ValueError(f"Unsupported method: {method}")
 
