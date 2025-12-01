@@ -5,10 +5,7 @@ import torch.nn as nn
 import numpy as np
 from einops import rearrange
 from typing import Optional, Any
-import sys
-sys.path.append("/data/shared/Huggingface/sharedcode/DiffusionWM/Watermarkschemes/models/stablesignature/src")
-sys.path.append("/mnt/shared/Huggingface/sharedcode/DiffusionWM/Watermarkschemes/models/stablesignature/src")
-from ldm.modules.attention import MemoryEfficientCrossAttention
+from wm.algorithms.models.stablesignature.src.ldm.modules.attention import MemoryEfficientCrossAttention
 
 try:
     import xformers

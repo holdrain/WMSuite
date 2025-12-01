@@ -22,21 +22,20 @@ from torch.optim.lr_scheduler import LambdaLR
 from torchvision.utils import make_grid
 from tqdm import tqdm
 
-sys.path.append("/data/shared/Dongziping/sharedcode/DiffusionWM/src/Watermarkschemes/models/stablesignature/src")
-sys.path.append("/mnt/shared/Dongziping/sharedcode/DiffusionWM/src/Watermarkschemes/models/stablesignature/src")
-from ldm.models.autoencoder import AutoencoderKL, IdentityFirstStage
-from ldm.models.diffusion.ddim import DDIMSampler
-from ldm.modules.diffusionmodules.util import (
+
+from wm.algorithms.models.stablesignature.src.ldm.models.autoencoder import AutoencoderKL, IdentityFirstStage
+from wm.algorithms.models.stablesignature.src.ldm.models.diffusion.ddim import DDIMSampler
+from wm.algorithms.models.stablesignature.src.ldm.modules.diffusionmodules.util import (
     extract_into_tensor,
     make_beta_schedule,
     noise_like,
 )
-from ldm.modules.distributions.distributions import (
+from wm.algorithms.models.stablesignature.src.ldm.modules.distributions.distributions import (
     DiagonalGaussianDistribution,
     normal_kl,
 )
-from ldm.modules.ema import LitEma
-from ldm.util import (
+from wm.algorithms.models.stablesignature.src.ldm.modules.ema import LitEma
+from wm.algorithms.models.stablesignature.src.ldm.util import (
     count_params,
     default,
     exists,

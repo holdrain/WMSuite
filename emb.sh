@@ -1,7 +1,8 @@
 BATCH_SIZE=8
-NUM=8
-METHOD="vine"
-DATASETS="/mnt/shared/Diffusiondbsub/train"
+NUM=100
+DEVICE="cuda:0"
+METHOD="dwtdct"
+DATASETS="sampled_train_5000"
 OUTPUT_DIR="./outputs"
 
 # generate authentic watermark data for testing the performance of defense
@@ -14,5 +15,6 @@ python -m wm.cli.emb \
     --num ${NUM} \
     --batch_size ${BATCH_SIZE} \
     --filetype .png \
-    --message default
+    --message_mode default \
+    --device ${DEVICE}
 echo "Finished ${method} on ${dataset}"

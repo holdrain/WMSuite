@@ -4,9 +4,7 @@ import torch
 import numpy as np
 from tqdm import tqdm
 import sys
-sys.path.append("/data/shared/Huggingface/sharedcode/DiffusionWM/Watermarkschemes/models/stablesignature/src")
-sys.path.append("/mnt/shared/Huggingface/sharedcode/DiffusionWM/Watermarkschemes/models/stablesignature/src")
-from ldm.modules.diffusionmodules.util import make_ddim_sampling_parameters, make_ddim_timesteps, noise_like, extract_into_tensor
+from wm.algorithms.models.stablesignature.src.ldm.modules.diffusionmodules.util import make_ddim_sampling_parameters, make_ddim_timesteps, noise_like, extract_into_tensor
 
 
 class DDIMSampler(object):

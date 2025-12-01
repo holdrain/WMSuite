@@ -5,10 +5,7 @@ import torch.nn.functional as F
 from torch import nn, einsum
 from einops import rearrange, repeat
 from typing import Optional, Any
-import sys
-sys.path.append("/data/shared/Huggingface/sharedcode/DiffusionWM/Watermarkschemes/models/stablesignature/src")
-sys.path.append("/mnt/shared/Huggingface/sharedcode/DiffusionWM/Watermarkschemes/models/stablesignature/src")
-from ldm.modules.diffusionmodules.util import checkpoint
+from wm.algorithms.models.stablesignature.src.ldm.modules.diffusionmodules.util import checkpoint
 
 
 try:

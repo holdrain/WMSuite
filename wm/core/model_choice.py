@@ -98,7 +98,7 @@ def get_stablesignature(device,nowm=False):
         unexpected_keys = ldm_aef.load_state_dict(state_dict, strict=False)
 
     # huggingface stable diffusion path
-    model = "/mnt/shared/AI_4/Huggingface/stable-diffusion-v2-1"
+    model = "CompVis/stable-diffusion-v1-4"
     pipe = StableDiffusionPipeline.from_pretrained(model).to(device)
     pipe.vae.decode = (lambda x,  *args, **kwargs: ldm_aef.decode(x).unsqueeze(0))
 

@@ -5,10 +5,7 @@ import numpy as np
 import torch as th
 import torch.nn as nn
 import torch.nn.functional as F
-import sys
-sys.path.append("/data/shared/Huggingface/sharedcode/DiffusionWM/Watermarkschemes/models/stablesignature/src")
-sys.path.append("/mnt/shared/Huggingface/sharedcode/DiffusionWM/Watermarkschemes/models/stablesignature/src")
-from ldm.modules.diffusionmodules.util import (
+from wm.algorithms.models.stablesignature.src.ldm.modules.diffusionmodules.util import (
     checkpoint,
     conv_nd,
     linear,
@@ -17,8 +14,8 @@ from ldm.modules.diffusionmodules.util import (
     normalization,
     timestep_embedding,
 )
-from ldm.modules.attention import SpatialTransformer
-from ldm.util import exists
+from wm.algorithms.models.stablesignature.src.ldm.modules.attention import SpatialTransformer
+from wm.algorithms.models.stablesignature.src.ldm.util import exists
 
 
 # dummy replace

@@ -97,7 +97,7 @@ transforms_dict_encode = {
         transforms.ToTensor(),
     ]),
     'vine':transforms.Compose([
-        transforms.Resize(256, interpolation=transforms.InterpolationMode.BICUBIC), 
+        transforms.Resize((256,256), interpolation=transforms.InterpolationMode.BICUBIC), 
         transforms.ToTensor(),
         transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5]),
     ])
