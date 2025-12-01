@@ -1,6 +1,4 @@
 import argparse
-
-import torch
 from wm.core.helpers import *
 from wm.core.encode import *
 
