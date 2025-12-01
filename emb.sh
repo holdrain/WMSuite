@@ -1,7 +1,7 @@
 BATCH_SIZE=8
 NUM=100
 DEVICE="cuda:0"
-METHOD="dwtdct"
+METHOD="hidden" # stegastamp, dwtdct, stable_signature,hidden,rivaGan, vine
 DATASETS="sampled_train_5000"
 OUTPUT_DIR="./outputs"
 

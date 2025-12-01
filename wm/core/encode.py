@@ -175,7 +175,7 @@ def run_rivagan(opt, message_type="default"):
                 image_tensor=img.squeeze(0),
                 encoder=encoder,
                 method="rivagan",
-                device=opt.device,
+                device='cpu',
                 message=message,
             )
             save_clean_and_wm(
@@ -208,7 +208,7 @@ def run_dwtdct(opt, message_type="default"):
                 image_tensor=img.squeeze(0),
                 encoder=encoder,
                 method="dwtdct",
-                device=opt.device,
+                device='cpu',
                 message=message,
             )
             save_clean_and_wm(

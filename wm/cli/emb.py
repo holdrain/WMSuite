@@ -20,7 +20,6 @@ def Options():
 
 if __name__ == '__main__':
     opt = Options()
-    device = torch.device('cuda:0')
     set_seeds(2025)
     if opt.method == 'stable_signature':
         run_stable_signature(opt)

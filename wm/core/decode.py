@@ -96,7 +96,6 @@ def decode_from_folder(opt, decoder):
                 bitacc, is_tp, decoded_msg = decode_single_image(
                     image_tensor=image_tensor,
                     target_message_tensor=target_message_tensor,
-                    method=opt.method,
                     device=opt.device,
                     decoder=decoder,
                     tolerant_bits=tolerant_bits
