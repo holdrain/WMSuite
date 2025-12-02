@@ -1,9 +1,9 @@
 BATCH_SIZE=8
-NUM=100
-DEVICE="cuda:0"
-METHOD="hidden" # stegastamp, dwtdct, stable_signature,hidden,rivaGan, vine
+NUM=1000
+DEVICE="cuda:1"
+METHOD="vine" # stegastamp, dwtdct, stable_signature,hidden,rivaGan, vine
 DATASETS="sampled_train_5000"
-OUTPUT_DIR="./outputs"
+OUTPUT_DIR="/home/dongziping/WMAna/data"
 
 # generate authentic watermark data for testing the performance of defense
 

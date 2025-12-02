@@ -47,11 +47,13 @@ def encode_single_image(
         clean_tensor (Tensor), encoded_tensor (Tensor)
     """
     image_tensor = image_tensor.unsqueeze(0).to(device)
+    
 
     # Methods requiring message
     if method in ["hidden", "stegastamp", "vine"]:
         msg_tensor = torch.tensor(str2msg(message)).unsqueeze(0).to(device)
 
+    # print(image_tensor.device,msg_tensor.device)
     # Dispatch encoding
     if method == "hidden":
         encoded = encoder(image_tensor, msg_tensor)
@@ -91,10 +93,9 @@ def run_stable_signature(opt):
     encoder, _ = get_stablesignature(opt.device, nowm=False)
 
     count = 0
-    while count < opt.num:
-        prompts = random.choices(prompts_list, k=opt.batch_size)
-
-        with tqdm(total=opt.num, desc=f"generating wm images by {opt.method}") as pbar:
+    with tqdm(total=opt.num, desc=f"generating wm images by {opt.method}") as pbar:
+        while count < opt.num:
+            prompts = random.choices(prompts_list, k=opt.batch_size)
             set_seeds(count)
             clean_imgs = encoder_nowm(
                 prompts,
