@@ -3,11 +3,11 @@ import torch
 from tqdm.auto import tqdm
 from datetime import datetime
 
-from wm.core.dataset import CustomImageFolder
-from wm.core.helpers import msg2str, str2msg
-from wm.core.yml import load_config
-from wm.core.helpers import transforms_dict_decode,cal_tolerant,message_length_dict,message_dict,set_seeds
-from wm.core.model_choice import (
+from WMSuite.wm.core.dataset import CustomImageFolder
+from WMSuite.wm.core.helpers import msg2str, str2msg
+from WMSuite.wm.core.yml import load_config
+from WMSuite.wm.core.helpers import transforms_dict_decode,cal_tolerant,message_length_dict,message_dict,set_seeds
+from WMSuite.wm.core.model_choice import (
     get_DwtDct,
     get_hiddenmodel,
     get_rivagan,
@@ -21,7 +21,7 @@ def load_models(method, device):
     if method == 'dwtdct':
         return get_DwtDct(wm_text=message_dict[method], wm_type='bits')
     elif method == 'hidden':
-        cfgpath = "wm/algorithms/config/hidden/hidden.yaml"
+        cfgpath = "WMSuite/wm/algorithms/config/hidden/hidden.yaml"
         cfg = load_config(cfgpath)
         return get_hiddenmodel(cfg.train, device)
     elif method == 'stegastamp':
@@ -36,7 +36,7 @@ def load_models(method, device):
         raise ValueError(f"Unsupported method: {method}")
     
 
-def decode_single_image(image_tensor, target_message_tensor, device, decoder, tolerant_bits):
+def decode_single_image(image_tensor, target_message_tensor, method, device, decoder, tolerant_bits):
     """
     Decode watermark from a single transformed image tensor.
 
@@ -59,14 +59,17 @@ def decode_single_image(image_tensor, target_message_tensor, device, decoder, to
 
     # Decode
     decoded_message = decoder(image_tensor)
-    decoded_message = decoded_message.round().clip(0, 1).long()
+    if method != "stegastamp":
+        decoded_message = decoded_message.round().clip(0, 1).long()
+    else:
+        decoded_message = (decoded_message > 0).long()
 
     # Compare with target
     diff = (decoded_message != target_message_tensor).float()
     bitwise_accuracy = (1.0 - diff.mean()).item()
-    is_tp = (diff.sum().item() <= tolerant_bits)
+    is_watermarked = (diff.sum().item() <= tolerant_bits)
 
-    return bitwise_accuracy, is_tp, decoded_message
+    return bitwise_accuracy, is_watermarked, decoded_message
 
 def decode_from_folder(opt, decoder):
     ds = CustomImageFolder(opt.data_path, transform=transforms_dict_decode[opt.method])
@@ -96,6 +99,7 @@ def decode_from_folder(opt, decoder):
                 bitacc, is_tp, decoded_msg = decode_single_image(
                     image_tensor=image_tensor,
                     target_message_tensor=target_message_tensor,
+                    method=opt.method,
                     device=opt.device,
                     decoder=decoder,
                     tolerant_bits=tolerant_bits
